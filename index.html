@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        .buttonSuccess {
+            padding: 10px 10px;
+            font-size: 10px;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+            color: #fff;
+            background-color: #04AA6D;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 3px 4px #999;;
+          }
+        .buttonSuccess:hover {background-color: #3e8e41}
+
+        .buttonSuccess:active {
+        background-color: #3e8e41;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+        }
+
+        .buttonError {
+            padding: 10px 10px;
+            font-size: 10px;
+            text-align: center;
+            cursor: pointer;
+            outline: none;
+            color: #220d0d;
+            background-color: #e33f55;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 3px 4px #999;;
+          }
+        .buttonError:hover {background-color: #7a3e8e}
+
+        .buttonError:active {
+        background-color: #7a3e8e;
+        box-shadow: 0 5px #666;
+        transform: translateY(4px);
+        }
+    </style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        console.log('local servers loaded');
+        window.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            
+            console.log('event received',data);
+            console.log('event received',data.sfdcEvent);
+            if (data.sfdcEvent === "addPartnerLead") {
+                document.getElementById("windowMsg").innerHTML= JSON.stringify(data.createPayload);
+            }
+        };
+
+        fireEvent = function() {
+            //const iframe = document.getElementsByTagName('iframe')[0];
+            //iframe.contentWindow.postMessage('hello', '*');
+            const sfData = {
+                received: true,
+                create: 'success',
+                partnerLeadId: 'sample_partner_lead_12345',
+            };
+
+            window.top.postMessage(JSON.stringify(sfData), '*');
+            //<!-- const iframeEvent = new Event("iframeEvent");
+            //document.dispatchEvent(iframeEvent); -->
+            console.log('----');
+        }
+
+        reset = function() {
+            document.getElementById("windowMsg").innerHTML= "Place where you see the msg ---> Default Static message";
+        }
+
+
+        //<!-- const myButton = document.getElementById("firEventButton");
+        //myButton.addEventListener("click", function() {
+            //fireEvent();
+        //    console.log('----');
+        //}); -->
+    </script>
+</head>
+<body style="border: 1px;">
+    <p style="font-size: large;
+    font-style: oblique;
+    font-stretch: ultra-expanded;">This is a Local hosted page.</p>
+    <div id="windowMsg" style="color: blue;">Place where you see the msg ---> Default Static message</div>
+    <br>
+    <button onclick="fireEvent()" id="firEventButton" class="buttonSuccess">Fire Event to Parent</button>
+    <button onclick="reset()" id="firEventButton" class="buttonError">Reset</button>
+</body>
+</html>
